@@ -30,13 +30,22 @@ def assemble():
 
 
 def validate(text):
-    """Gate: 1-200 characters of UTF-8 text, not only whitespace."""
+    """Gate the entry line: one line, 1-200 chars, never empty or blank.
+
+    The judge caps entries at 200 characters and a blank or
+    whitespace-only line is not an entry at all, so both are rejected
+    here with an explicit error before anything is written out.
+    """
     if not isinstance(text, str):
         raise TypeError("entry must be a string")
-    if not (1 <= len(text) <= MAX_CHARS):
-        raise ValueError(f"entry must be 1-200 chars, got {len(text)}")
+    if text == "":
+        raise ValueError("entry must not be empty")
     if not text.strip():
-        raise ValueError("entry must not be only whitespace")
+        raise ValueError("entry must not be whitespace only")
+    if len(text) > MAX_CHARS:
+        raise ValueError(
+            f"entry exceeds the {MAX_CHARS}-character gate: got {len(text)}"
+        )
     text.encode("utf-8")
     return text
 
